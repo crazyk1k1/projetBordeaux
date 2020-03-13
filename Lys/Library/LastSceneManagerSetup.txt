@@ -1,9 +1,5 @@
 sceneSetups:
-<<<<<<< HEAD
-- path: Assets/Scenes/Clement01.unity
-=======
 - path: Assets/Scenes/Killian01.unity
->>>>>>> 5fc1d1ef6946ac5910f5cc9dc5af77f43af161d7
   isLoaded: 1
   isActive: 1
   isSubScene: 0
