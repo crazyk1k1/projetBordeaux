@@ -6,10 +6,10 @@ public class Controller : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 2f;
     private float currentSpeed = 0f;
-    private float speedSmoothVelocity = 0f;
-    private float speedSmoothTime = 0.1f;
-    private float rotationSpeed = 0.1f;
-    private float gravity = 3f;
+    public float speedSmoothVelocity = 0f;
+    public float speedSmoothTime = 0.1f;
+    public float rotationSpeed = 0.01f;
+    public float gravity = 3f;
 
     private Transform mainCameraTransform = null;
 
