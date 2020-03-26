@@ -72,14 +72,14 @@ public class ControllerV2 : MonoBehaviour
             rb.MovePosition(transform.position + transform.right * -speed * Time.deltaTime);
 
         }
-
+        /*
         if (Input.GetKeyDown(jump))
         {
             //Vector3 V = new Vector3(transform.position.x, transform.position.y, transform.position.z + speed);
 
             rb.MovePosition(transform.position + transform.up * jumpForce * Time.deltaTime);
-
-        }
+            
+        }*/
 
         if (Input.GetKey(run))
         {
