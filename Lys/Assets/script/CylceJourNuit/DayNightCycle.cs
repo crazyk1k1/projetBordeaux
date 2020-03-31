@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class DayNightCycle : MonoBehaviour
 {
@@ -18,11 +19,13 @@ public class DayNightCycle : MonoBehaviour
         }
     }
     [SerializeField]
+    private float elapseTime;
+    [SerializeField]
     private float elapsedTime;
     [SerializeField]
     private bool use24Clock = true;
     [SerializeField]
-    private Text clockText;
+    private TextMeshProUGUI clockText;
     [SerializeField]
     [Range(0f, 1f)]
     private float _timeOfDay;
@@ -62,6 +65,9 @@ public class DayNightCycle : MonoBehaviour
         }
     }
     public bool pause = false;
+    [SerializeField]
+    private AnimationCurve timeCurve;
+    private float timeCurveNormalization;
 
     [Header("SunLight")]
     [SerializeField]
@@ -76,28 +82,65 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField]
     private Gradient sunColor;
 
+    [Header("Season")]
+    [SerializeField]
+    private Transform sunSeasonalRotation;
+    [SerializeField]
+    [Range(-45f, 45f)]
+    private float maxSeasonalTilt;
+
+    [Header("Modules")]
+    private List<DNModuleBase> moduleList = new List<DNModuleBase>();
+
+
+    private void UpdateTimeScale()
+    {
+        _timeScale = 24 / (_targetDayLength / 60);
+        _timeScale *= timeCurve.Evaluate(elapsedTime / (targetDayLength * 60));
+        _timeScale /= timeCurveNormalization;
+    }
+
+    private void NormalTimeCurve()
+    {
+        float stepSize = 0.01f;
+        int numberSteps = Mathf.FloorToInt(1f / stepSize);
+        float curveTotal = 0;
+
+        for (int i = 0; i < numberSteps; i++)
+        {
+            curveTotal += timeCurve.Evaluate(i * stepSize);
+        }
+
+        timeCurveNormalization = curveTotal / numberSteps;
+    }
+
+    private void Start()
+    {
+        NormalTimeCurve();
+    }
+
     private void Update()
     {
         if(!pause)
         {
             UpdateTimeScale();
             UpdateTime();
+            UpdateClock();
         }
 
         adjustSunRotation();
         SunIntensity();
-    }
-
-    private void UpdateTimeScale()
-    {
-        _timeScale = 24 / (_targetDayLength / 60);
+        AdjustSunColor();
+        UpdateModules();
     }
 
     private void UpdateTime()
     {
         _timeOfDay += Time.deltaTime * _timeScale / 86400; // secondes dans un jour
+        elapsedTime += Time.deltaTime;
         if(timeOfDay > 1)
         {
+            elapsedTime = 0;
             _dayNumber++;
             _timeOfDay -= 1;
 
@@ -109,11 +152,24 @@ public class DayNightCycle : MonoBehaviour
         }
     }
 
+    private void UpdateClock()
+    {
+        float time = elapsedTime / (targetDayLength * 60);
+        float hour = Mathf.FloorToInt(time * 24);
+        float minute = Mathf.FloorToInt(((time * 24) - hour) * 60);
+
+        clockText.text = "Time " + hour.ToString() + " : " + minute.ToString();
+        
+    }
+
 
     private void adjustSunRotation()
     {
         float SunAngle = timeOfDay * 360;
         DailyRotation.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, SunAngle));
+
+        float seasonalAngle = -maxSeasonalTilt * Mathf.Cos(dayNumber / _yearLength * 2f * Mathf.PI);
+        sunSeasonalRotation.localRotation = Quaternion.Euler(new Vector3(seasonalAngle, 0f, 0f));
     }
 
     private void SunIntensity()
@@ -127,6 +183,24 @@ public class DayNightCycle : MonoBehaviour
     private void AdjustSunColor()
     {
         sun.color = sunColor.Evaluate(intensity);
+    }
+
+    public void AddModule(DNModuleBase module)
+    {
+        moduleList.Add(module);
+    }
+
+    public void RemoveModule(DNModuleBase module)
+    {
+        moduleList.Remove(module);
+    }
+
+    private void UpdateModules()
+    {
+        foreach (DNModuleBase module in moduleList)
+        {
+            module.UpdateModule(intensity);
+        }
     }
 }
     
