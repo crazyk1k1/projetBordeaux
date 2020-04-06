@@ -45,6 +45,9 @@ public class DayNightCycle : MonoBehaviour
             return _dayNumber;
         }
     }
+
+    public int dayNumberWeek = 1;
+    public int weekLenght = 7;
     [SerializeField]
     private int _yearNumber = 0;
     public int yearNumber
@@ -91,6 +94,8 @@ public class DayNightCycle : MonoBehaviour
 
     [Header("Modules")]
     private List<DNModuleBase> moduleList = new List<DNModuleBase>();
+
+    public float timeHour;
 
 
     private void UpdateTimeScale()
@@ -144,10 +149,17 @@ public class DayNightCycle : MonoBehaviour
             _dayNumber++;
             _timeOfDay -= 1;
 
+            dayNumberWeek++;
+
             if(_dayNumber > _yearLength)
             {
                 _yearNumber++;
                 _dayNumber = 0;
+            }
+
+            if(dayNumberWeek > weekLenght)
+            {
+                dayNumberWeek = 1;
             }
         }
     }
@@ -158,7 +170,47 @@ public class DayNightCycle : MonoBehaviour
         float hour = Mathf.FloorToInt(time * 24);
         float minute = Mathf.FloorToInt(((time * 24) - hour) * 60);
 
-        clockText.text = "Time " + hour.ToString() + " : " + minute.ToString();
+        timeHour = Mathf.FloorToInt(time * 24);
+
+        string hourString;
+        string minuteString;
+
+        if(!use24Clock && hour > 12)
+        {
+            hour -= 12;
+        }
+
+        if(hour < 10)
+        {
+            hourString = "0" + hour.ToString();
+        }
+        else
+        {
+            hourString = hour.ToString();
+        }
+
+        if (minute < 10)
+        {
+            minuteString = "0" + minute.ToString();
+        }
+        else
+        {
+            minuteString = minute.ToString();
+        }
+
+        if(use24Clock)
+        {
+            clockText.text = hourString + " : " + minuteString;
+        }
+        else if(time > 0.5f)
+        {
+            clockText.text = hourString + " : " + minuteString + " PM";
+        }
+        else
+        {
+            clockText.text = hourString + " : " + minuteString + " AM";
+        }
+        
         
     }
 
