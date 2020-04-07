@@ -976,6 +976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 4383090828036579471}
+  model: {fileID: 4383090828363992977}
   look: {fileID: 4383090829294758607}
   speed: 4
   runMultiplier: 1.5

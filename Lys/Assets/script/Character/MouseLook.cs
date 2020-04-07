@@ -70,11 +70,11 @@ public class MouseLook : MonoBehaviour
 
             if (followCamPoint.localPosition.y > maxYcam)
             {
-                followCamPoint.localPosition = new Vector3(followCamPoint.localPosition.x, followCamPoint.localPosition.y - 0.01f, followCamPoint.localPosition.z);
+                followCamPoint.localPosition = new Vector3(followCamPoint.localPosition.x, followCamPoint.localPosition.y - 0.05f, followCamPoint.localPosition.z);
             }
            if (followCamPoint.localPosition.y < -maxYcam)
             {
-                followCamPoint.localPosition = new Vector3(followCamPoint.localPosition.x, followCamPoint.localPosition.y + 0.01f, followCamPoint.localPosition.z);
+                followCamPoint.localPosition = new Vector3(followCamPoint.localPosition.x, followCamPoint.localPosition.y + 0.05f, followCamPoint.localPosition.z);
             }
 
             //Debug.Log(followCamPoint.localPosition.y);
