@@ -7,7 +7,7 @@ public class UI_Herbier : MonoBehaviour
 {
     
     public GameObject carte;
-    [SerializeField]
+    public GameObject inventaire;
     
     // Start is called before the first frame update
     void Start()
@@ -23,10 +23,12 @@ public class UI_Herbier : MonoBehaviour
     public void OpenHerbier()
     {
         carte.gameObject.SetActive(true);
+        inventaire.gameObject.SetActive(true);
        
     }
     public void CloseHerbier()
     {
         carte.gameObject.SetActive(false);
+        inventaire.gameObject.SetActive(false);
     }
 }
