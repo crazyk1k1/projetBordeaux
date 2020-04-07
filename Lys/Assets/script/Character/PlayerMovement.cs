@@ -5,10 +5,15 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
+    public MouseLook look;
 
     public float speed = 12f;
     public float runMultiplier;
     public KeyCode runKey;
+    public KeyCode backWalk;
+    public KeyCode frontWalk;
+    public KeyCode leftWalk;
+    public KeyCode rightWalk;
     public float gravity = -9.81f;
     public float jumpHeight = 3f;
 
@@ -25,7 +30,9 @@ public class PlayerMovement : MonoBehaviour
     public AudioClip[] walkSFX;
 
     private float nextActionTime = 0.0f;
-    private float period = 0.5f;
+    private float period = 1.5f;
+
+
 
     private void Start()
     {
@@ -59,30 +66,75 @@ public class PlayerMovement : MonoBehaviour
         
         if (Input.GetKey(runKey))
         {
-            controller.Move(move * speed * runMultiplier * Time.deltaTime);
+            controller.Move(move * speed * Time.deltaTime);
             //rb.MovePosition(transform.localPosition + move * speed * runMultiplier * Time.deltaTime);
             source.pitch = 1.2f;
         }
         else
         {
-            controller.Move(move * speed * Time.deltaTime);
+            controller.Move(move * speed * runMultiplier * Time.deltaTime);
             //rb.MovePosition(transform.localPosition + move * speed * Time.deltaTime);
             source.pitch = 1;
             
             
         }
 
-       /*
-        if (Time.time > nextActionTime && isGrounded && (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S)))
+
+        if(Input.GetKey(leftWalk)/* && Time.time - nextActionTime >= period*/)
         {
-           
-            nextActionTime += period;
-            walk();
-        }*/
-        
-        
+            nextActionTime = Time.time;
+
+            transform.Rotate(Vector3.up * -1f);
+
+            look.playerFollowMouse = false;
+        }
+        else
+        {
+            look.playerFollowMouse = true;
+        }
+
+
+        if (Input.GetKey(rightWalk)/* && Time.time - nextActionTime >= period*/)
+        {
+            nextActionTime = Time.time;
+
+            transform.Rotate(Vector3.up * 1f);
+
+            look.playerFollowMouse = false;
+        }
+        else
+        {
+            look.playerFollowMouse = true;
+        }
+
+
+        if (Input.GetKey(backWalk) && Time.time - nextActionTime >= period)
+        {
+            nextActionTime = Time.time;
+
+            transform.Rotate(Vector3.up * 180);
+
+            look.playerFollowMouse = false;
+        }
+        else
+        {
+            look.playerFollowMouse = true;
+        }
+
+
+
+        /*
+         if (Time.time > nextActionTime && isGrounded && (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S)))
+         {
+
+             nextActionTime += period;
+             walk();
+         }*/
+
+
         if (Input.GetButtonDown("Jump") &&( isGrounded))
         {
+           
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
 

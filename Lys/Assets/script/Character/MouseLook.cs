@@ -19,6 +19,7 @@ public class MouseLook : MonoBehaviour
     float xRotation = 0f;
 
     public bool lockerCam = true;
+    public bool playerFollowMouse = true;
 
     // Start is called before the first frame update
     void Start()
@@ -53,8 +54,11 @@ public class MouseLook : MonoBehaviour
             
             //Vector3 rot = new Vector3(MouseX, MouseY, 0f);
            // transform.rotation = new Quaternion (rot.x, rot.y, rot.z, transform.rotation.w);
-
-            playerBody.Rotate(Vector3.up * MouseX * smoothPlayer);
+           if(playerFollowMouse)
+            {
+                playerBody.Rotate(Vector3.up * MouseX * smoothPlayer);
+            }
+           
 
 
 
